@@ -1,0 +1,16 @@
+/* 🌟 Glow animation for filtered tasks */
+@keyframes glow {
+  0% {
+    background-color: #fef9c3; /* soft yellow */
+  }
+  50% {
+    background-color: #fef08a; /* bright yellow */
+  }
+  100% {
+    background-color: #fef9c3; /* soft yellow */
+  }
+}
+
+.animate-glow {
+  animation: glow 1.2s ease-in-out;
+}
