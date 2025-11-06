@@ -38,7 +38,7 @@ console.log("🔍 Board received in BoardView:", board);
   };
 
   return (
-    <div  ref={setNodeRef} className= "bg-gradient-to-br from-pink-100 to-purple-100 border-4 border-zinc-600 p-3  rounded relative overflow-hidden">
+    <div  ref={setNodeRef} className= "bg-gradient-to-br from-pink-50 to-purple-50 border-4 border-zinc-600 p-3  rounded relative overflow-hidden">
       {/* ---------- COLUMN HEADER ---------- */}
       <div className="flex items-center justify-between mb-4 border-b border-dashed  pb-2">
         <h3 className="font-semibold  text-2xl">{column.title} </h3>
