@@ -14,7 +14,8 @@ connectDB();
 const app = express();
 app.use(cors());
 app.use(cors({
-   origin: 'https://task-management-lovat-ten.vercel.app/'  //to be changed later to vercel url
+   origin: 'https://task-management-lovat-ten.vercel.app/',
+   origin:'localhost:5173'  //to be changed later to vercel url
  }));app.use(express.json());
 
 app.get("/", (req, res) => res.send("API is running..."));
