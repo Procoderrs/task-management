@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Task from "./Task.js";
 
 
 
@@ -25,5 +26,19 @@ const boardSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+
+
+
+boardSchema.pre(['findOneAndDelete', 'findByIdAndDelete'], async function (next) {
+  const boardId = this.getQuery()['_id'];
+  console.log("🧹 Deleting board and its tasks for:", boardId);
+  if (boardId) {
+    await Task.deleteMany({ boardId });
+  }
+  next();
+});
+
 export default mongoose.model("Board", boardSchema);
+
+
 

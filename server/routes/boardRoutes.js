@@ -87,8 +87,8 @@ router.put("/:id", async (req, res) => {
 // Delete board
 router.delete("/:id", async (req, res) => {
   try {
-    await Board.findByIdAndDelete(req.params.id);
-    res.json({ message: "Board deleted" });
+    await Board.findByIdAndDelete({_id:req.params.id});
+    res.json({ message: "Board and its task  deleted" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

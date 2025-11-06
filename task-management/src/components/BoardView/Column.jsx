@@ -38,9 +38,9 @@ console.log("🔍 Board received in BoardView:", board);
   };
 
   return (
-    <div  ref={setNodeRef} className= " bg-gray-100 border-4 border-zinc-600 p-3  rounded relative overflow-hidden">
+    <div  ref={setNodeRef} className= "bg-gradient-to-br from-pink-100 to-purple-100 border-4 border-zinc-600 p-3  rounded relative overflow-hidden">
       {/* ---------- COLUMN HEADER ---------- */}
-      <div className="flex items-center justify-between mb-4 border-b border-dashed pb-2">
+      <div className="flex items-center justify-between mb-4 border-b border-dashed  pb-2">
         <h3 className="font-semibold  text-2xl">{column.title} </h3>
         <span className="text-sm text-gray-500">{column.taskIds.length}</span>
       </div>
@@ -106,7 +106,7 @@ console.log("🔍 Board received in BoardView:", board);
         </form>
       ) : (
         <button
-          className="mt-3 text-sm bg-purple-900 text-white border border-zinc-800 rounded  p-3"
+          className="mt-3  text-purple-900 text-lg  rounded  p-3"
           onClick={() => setAdding(true)}
         >
           + Add task

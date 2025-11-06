@@ -28,7 +28,7 @@ const BoardPage = () => {
   }
 
   return (
-    <div className="p-6 ">
+    <div className="p-6  bg-gradient-to-br from-pink-100 to-yellow-50 min-h-screen ">
       <div className="flex justify-between items-center mb-4 border-b-4 border-zinc-600  rounded   py-4 px-3">
         <h1 className="text-2xl font-black text-purple-900"> <span className="text-xl text-gray-600">Board name:</span> {board.title.toUpperCase()} Task 📚</h1>
         <Link to="/" className="text-sm text-white  border px-5 py-3 rounded bg-blue-900 hover:bg-blue-500  ">
