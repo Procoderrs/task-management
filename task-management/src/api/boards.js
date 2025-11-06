@@ -1,5 +1,5 @@
 // src/api/boards.js
-const API_BASE = "http://localhost:5000/api/boards";
+const API_BASE = `${import.meta.env.VITE_API_URL}/api/boards`;
 
 async function safeJson(res) {
   if (!res.ok) {

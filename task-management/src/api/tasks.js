@@ -1,5 +1,5 @@
 // src/api/tasks.js
-const API_URL = "http://localhost:5000/api/tasks";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/tasks`;
 
 async function safeJson(res) {
   if (!res.ok) {
