@@ -28,7 +28,7 @@ function BoardCard({ board }) {
 
       <button
         onClick={handleDelete}
-        className="absolute top-2 cursor-pointer right-3 text-red-500 hover:bg-red-200 hover:text-red-700"
+        className="absolute top-2 cursor-pointer right-3 p-2 text-red-500 hover:bg-red-200 hover:text-red-700"
       >
         ✕
       </button>
