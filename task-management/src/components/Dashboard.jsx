@@ -7,7 +7,7 @@ const Dashboard = () => {
   const { boards } = useContext(BoardContext);  // ✅ use real boards
 
   return (
-    <div className="min-h-screen  bg-gradient-to-br from-pink-100 to-yellow-50">
+    <div className="min-h-screen  bg-linear-to-br from-pink-100 to-yellow-50">
       <Header />
 
       {/* Boards grid */}
