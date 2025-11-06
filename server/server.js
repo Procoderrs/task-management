@@ -1,30 +1,36 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
+import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import taskRoutes from "./routes/taskRoutes.js";
-import boardRoutes from './routes/boardRoutes.js'
-
-// zeenatzeni0112  Password
-
+import boardRoutes from "./routes/boardRoutes.js";
 
 dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors());
+
+const allowedOrigins = [
+  "https://task-management-lovat-ten.vercel.app",
+  "http://localhost:5173"
+];
+
 app.use(cors({
-   origin: 'https://task-management-lovat-ten.vercel.app/',
-   origin:'localhost:5173'  //to be changed later to vercel url
- })); 
- 
- app.use(express.json());
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
+
+app.use(express.json());
 
 app.get("/", (req, res) => res.send("API is running..."));
 app.use("/api/tasks", taskRoutes);
-app.use('/api/boards', boardRoutes);
+app.use("/api/boards", boardRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
