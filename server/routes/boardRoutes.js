@@ -32,30 +32,14 @@ router.post("/", async (req, res) => {
   try {
     const lightColor=[
       
-      '#ECF4E8',     
-      '#DEDED1',
-      '#FBF3D1',
-      '#F5F5F0',
-      '#D9E9CF',
-      '#F5D2D2',
-      '#CBDCEB',
-      '#bae6fd',
-      '#EEE6CA',
-      '#FAF1E6',
-      '#FEE8D9',
-      '#badfdb',
-      '#FEEBF6',
-      '#FFEDFA',
-      '#EBD6FB',
-      '#C0C9EE',
-      '#EBFFD8',
-      '#FFDCDC',
-      '#FFF2EB',
-      '#ECFAE5',
-      '#DDF6D2',
-      '#FFD6BA',
-      
+      "#e9d5ff", "#bae6fd", "#bfdbfe", "#c7d2fe", "#E1E9C9",
+    '#FEEBF6', '#F4F8D3',  ,'#FFEDFA',
+   , '#EDE8DC',,'#FEFAE0','#FFEAA7','#F5EEE6', 
 
+   '#EADCF8', '#d7eaf3','#fadadd','#dff6e6','#ffe8d6','#e3f2fd','#f3e5f5','#fff8e7','#fce4ce','#e0f7fa',
+   
+
+    
 
     ];
       const randomColor=lightColor[Math.floor(Math.random()*lightColor.length)];
