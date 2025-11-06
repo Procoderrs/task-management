@@ -2,38 +2,38 @@
 const API_URL = `${import.meta.env.VITE_API_URL}/api/tasks`;
 
 async function safeJson(res) {
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`HTTP ${res.status}: ${text}`);
-  }
-  return res.json();
+	if (!res.ok) {
+		const text = await res.text();
+		throw new Error(`HTTP ${res.status}: ${text}`);
+	}
+	return res.json();
 }
 
 export const getTasks = async () => {
-  const res = await fetch(API_URL);
-  return safeJson(res);
+	const res = await fetch(API_URL);
+	return safeJson(res);
 };
 
 export const createTask = async (task) => {
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(task),
-  });
-  return safeJson(res);
+	const res = await fetch(API_URL, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(task),
+	});
+	return safeJson(res);
 };
 
 export const updateTaskApi = async (id, updates) => {
-  const res = await fetch(`${API_URL}/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updates),
-  });
-  return safeJson(res);
+	const res = await fetch(`${API_URL}/${id}`, {
+		method: "PUT",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(updates),
+	});
+	return safeJson(res);
 };
 
 export const deleteTaskApi = async (id) => {
-  const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-  if (!res.ok) throw new Error("Failed to delete task");
-  return;
+	const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+	if (!res.ok) throw new Error("Failed to delete task");
+	return;
 };

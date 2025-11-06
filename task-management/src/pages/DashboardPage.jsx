@@ -8,13 +8,6 @@ const DashboardPage = () => {
   return (
     <div>
      <Dashboard/>
-      {/* {boards.map(b => (
-        <div key={b.id}>
-          <h2>{b.title}</h2>
-          <button onClick={() => deleteBoard(b.id)}>Delete</button>
-        </div>
-      ))}
-      <button onClick={() => addBoard('New Board')}>Add Board</button> */}
     </div>
   );
 };

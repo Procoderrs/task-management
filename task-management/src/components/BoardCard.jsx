@@ -3,37 +3,41 @@ import { useContext } from "react";
 import { BoardContext } from "../context/boardContext";
 
 function BoardCard({ board }) {
-  const navigate = useNavigate();
-  console.log('board-id-board-card',board._id);
-  console.log("🔍 Board received in BoardView:", board);
+	const navigate = useNavigate();
+	console.log("board-id-board-card", board._id);
+	console.log("🔍 Board received in BoardView:", board);
 
-  const { deleteBoard } = useContext(BoardContext);
+	const { deleteBoard } = useContext(BoardContext);
 
-  const handleClick = () => {
-    navigate(`/board/${board._id}`);
-  };
+	const handleClick = () => {
+		navigate(`/board/${board._id}`);
+	};
 
-  const handleDelete = (e) => {
-    e.stopPropagation(); // prevent navigating
-    if (window.confirm("Are you sure you want to delete this board?")) {
-      deleteBoard(board._id);
-    }
-  };
+	const handleDelete = (e) => {
+		e.stopPropagation(); // prevent navigating
+		if (window.confirm("Are you sure you want to delete this board?")) {
+			deleteBoard(board._id);
+		}
+	};
 
-  return (
-    <div
-      onClick={handleClick}
-      className="cursor-pointer bg-white p-6 rounded-xl shadow hover:shadow-lg transition relative" style={{backgroundColor:board.color}}>
-      <h2 className="text-lg font-bold text-zinc-700 ">{board.title.toUpperCase()}</h2>
+	return (
+		<div
+			onClick={handleClick}
+			className="cursor-pointer bg-white p-6 rounded-xl shadow hover:shadow-lg transition relative"
+			style={{ backgroundColor: board.color }}
+		>
+			<h2 className="text-lg font-bold text-zinc-700 ">
+				{board.title.toUpperCase()}
+			</h2>
 
-      <button
-        onClick={handleDelete}
-        className="absolute top-2 cursor-pointer right-3 p-2 text-red-500 hover:bg-red-200 hover:text-red-700"
-      >
-        ✕
-      </button>
-    </div>
-  );
+			<button
+				onClick={handleDelete}
+				className="absolute top-2 cursor-pointer right-3 p-2 text-red-500 hover:bg-red-200 hover:text-red-700"
+			>
+				✕
+			</button>
+		</div>
+	);
 }
 
 export default BoardCard;
