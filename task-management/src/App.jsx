@@ -2,15 +2,24 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DashboardPage from "./pages/DashboardPage";
 import BoardPage from "./pages/BoardPage";
-import { BoardContext } from "./context/boardContext";
-import './App.css'
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import "./App.css";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<DashboardPage />} />
-      <Route path="/board/:id" element={<BoardPage />} />
+        {/* Public routes */}
+        <Route path="/" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+
+        {/* Protected routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/board/:id" element={<BoardPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

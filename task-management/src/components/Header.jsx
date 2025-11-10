@@ -1,54 +1,71 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { BoardContext } from "../context/boardContext";
 
 const Header = () => {
-	const { addBoard } = useContext(BoardContext);
+  const { user, logout, addBoard } = useContext(BoardContext);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const menuRef = useRef();
 
-	const handleAddBoard = () => {
-		const title = prompt("Enter board name:");
-		if (title) {
-			addBoard(title);
-		}
-	};
+  const handleAddBoard = () => {
+    const title = prompt("Enter board name:");
+    if (title) addBoard(title);
+  };
 
-	return (
-		<header className="bg-linear-to-br from-pink-100 to-purple-100 shadow-2xl px-6 py-4 flex justify-between items-center">
-			<h1 className="text-2xl  text-purple-800 font-black">Task Management</h1>
-			<button
-				onClick={handleAddBoard}
-				className="bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-500 transition"
-			>
-				+ Add Board
-			</button>
-		</header>
-	);
+  // Close the profile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowProfileMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <header className="bg-linear-to-br from-pink-100 to-purple-100 shadow-2xl px-6 py-4 flex justify-between items-center">
+      {/* Left side: title + add board */}
+      <div className="flex items-center gap-3">
+        <h1 className="text-2xl text-purple-800 font-black">Task Management</h1>
+        <button
+          onClick={handleAddBoard}
+          className="bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-500 transition"
+        >
+          + Add Board
+        </button>
+      </div>
+
+      {/* Right side: user/login */}
+      <div className="relative flex items-center gap-4" ref={menuRef}>
+        {user ? (
+          <>
+            <img
+              src="./profile.jpg"
+              alt="Profile"
+              className="w-12 h-12 rounded-full cursor-pointer"
+              onClick={() => setShowProfileMenu(!showProfileMenu)}
+            />
+            {/* Profile dropdown */}
+            {showProfileMenu && (
+              <div className="absolute right-0 mt-36 w-36 bg-white border rounded shadow-lg px-2 py-2 z-50">
+                <p className="font-bold text-purple-800 text-center mb-2">Hi {user.name}</p>
+                <button
+                  onClick={logout}
+                  className="w-full bg-red-500 hover:bg-red-600 text-white py-1 rounded"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <a href="/login" className="underline">
+            Login
+          </a>
+        )}
+      </div>
+    </header>
+  );
 };
 
 export default Header;
-
-/* 
-task-management--> main-folder
-node-modules
-public-folder
-
-src-folder
-1: component folder
-1.1 BoardCard.jsx
-1.2 Dashboard.jsx
-1.3 header.jsx
-1.4--board-view-folder
-1.4.1 board-view-jsx
-1.4.2 column.jsx
-1.4.3 task-card.jsx
-1.4.4 task model.jsx
-
-2:context
-2.1 boardContext
-
-3: pages
-3.1 board-page.jsx
-3.2dashboard-page.jsx
-
-4 utils
-4.1 getRandomColor.js
-*/

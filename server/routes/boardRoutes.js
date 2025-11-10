@@ -1,14 +1,16 @@
 // routes/boardRoutes.js
 import express from "express";
 import Board from "../models/Board.js";
+import authMiddleware from "../middleware/authMiddleware.js";
+
 import mongoose from "mongoose";
 
 const router = express.Router();
 
 // Get all boards
-router.get("/", async (req, res) => {
+router.get("/",authMiddleware, async (req, res) => {
   try {
-    const boards = await Board.find();
+    const boards = await Board.find({user:req.user._id});
     res.json(boards);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -16,7 +18,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get board by ID
-router.get("/:id", async (req, res) => {
+router.get("/:id",authMiddleware, async (req, res) => {
   try {
     const board = await Board.findById(req.params.id).populate('tasks');
     if (!board) return res.status(404).json({ message: "Board not found" });
@@ -27,7 +29,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Create a new board
-router.post("/", async (req, res) => {
+router.post("/",authMiddleware, async (req, res) => {
 
   try {
     const lightColor=[
@@ -44,13 +46,14 @@ router.post("/", async (req, res) => {
     ];
       const randomColor=lightColor[Math.floor(Math.random()*lightColor.length)];
     const {title}=req.body;
-    const defaultColumns=[
-      {id:new mongoose.Types.ObjectId(),title:'Todo',taskIds:[]},
-      {id:new mongoose.Types.ObjectId(),title:'InProgress',taskIds:[]},
-      {id:new mongoose.Types.ObjectId(),title:'Done',taskIds:[]},
-    ];
+    const defaultColumns = [
+  { id: new mongoose.Types.ObjectId().toString(), title: 'Todo', taskIds: [] },
+  { id: new mongoose.Types.ObjectId().toString(), title: 'InProgress', taskIds: [] },
+  { id: new mongoose.Types.ObjectId().toString(), title: 'Done', taskIds: [] },
+];
 
-    const board = new Board({title,columns:defaultColumns,color:randomColor,});
+
+    const board = new Board({title,columns:defaultColumns,color:randomColor,user:req.user._id});
     const savedBoard = await board.save();
     res.status(201).json(savedBoard);
   } catch (err) {
@@ -58,24 +61,33 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Update board
-router.put("/:id", async (req, res) => {
+
+
+// Delete board
+// Delete board (only owner)
+// Delete board (only owner)
+router.delete("/:id", authMiddleware, async (req, res) => {
   try {
-    const updated = await Board.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updated);
+    const board = await Board.findById(req.params.id);
+    if (!board) return res.status(404).json({ message: "Board not found" });
+
+    if (board.user.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+
+    await Board.findByIdAndDelete(req.params.id); // simpler
+    res.json({ message: "Board deleted" });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error("DELETE board error:", err.message);
+    res.status(500).json({ message: err.message });
   }
 });
 
-// Delete board
-router.delete("/:id", async (req, res) => {
-  try {
-    await Board.findByIdAndDelete({_id:req.params.id});
-    res.json({ message: "Board and its task  deleted" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+
+
+
+router.post("/", authMiddleware, async (req, res) => {
+  // only logged-in users can create boards
 });
 
 export default router;

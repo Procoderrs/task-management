@@ -37,12 +37,12 @@ const BoardPage = () => {
 					<span className="text-xl text-gray-600">Board name:</span>{" "}
 					{board.title.toUpperCase()} Task 📚
 				</h1>
-				<Link
+				{/* <Link
 					to="/"
 					className="text-sm text-white  border px-5 py-3 rounded bg-blue-900 hover:bg-blue-500  "
 				>
 					← Back
-				</Link>
+				</Link> */}
 			</div>
 
 			{/* ✅ Pass the found board to BoardView */}
