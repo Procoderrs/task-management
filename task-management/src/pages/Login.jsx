@@ -1,6 +1,7 @@
 import React, { useState,useContext,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BoardContext } from "../context/boardContext";
+import { Link } from "react-router-dom";
 
 
 const Login = () => {
@@ -120,11 +121,11 @@ useEffect(() => {
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-4">
-          Don't have an account?{" "}
-          <a href="/signup" className="text-blue-500 hover:underline">
-            Sign Up
-          </a>
-        </p>
+  Don't have an account?{" "}
+  <Link to="/" className="text-blue-500 hover:underline">
+    Sign Up
+  </Link>
+</p>
       </div>
     </div>
   );
