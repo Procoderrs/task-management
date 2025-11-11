@@ -17,17 +17,30 @@ const allowedOrigins = [
   "http://localhost:5173"
 ];
 
+
+
 app.use(cors({
-  origin: (origin, callback) => {
+  origin: function(origin, callback) {
     // allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-    return callback(new Error("CORS not allowed from this origin: " + origin), false);
+    callback(null, false); // return false instead of Error
   },
-  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
+
+// handle preflight requests
+app.options("*", cors({
+  origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+
 
 
 app.use(express.json());
