@@ -27,7 +27,7 @@ function BoardCard({ board }) {
 			style={{ backgroundColor: board.color }}
 		>
 			<h2 className="text-lg font-bold text-zinc-700 ">
-				{board.title.toUpperCase()}
+				{board.title}
 			</h2>
 
 			<button
