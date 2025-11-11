@@ -13,8 +13,7 @@ connectDB();
 const app = express();
 
 const allowedOrigins = [
-  "https://task-management-5qzx.vercel.app",  // frontend link
-  "http://localhost:5173"
+  "https://task-management-5qzx.vercel.app", 
 ];
 
 
