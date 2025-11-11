@@ -1,5 +1,5 @@
 // ✅ src/context/BoardContext.jsx
-import React, { createContext, useReducer, useRef ,useState} from "react";
+import React, { createContext, useReducer, useRef ,useState,useEffect} from "react";
 import { v4 as uuidv4 } from "uuid";
 
 // API helpers
@@ -113,6 +113,7 @@ function boardReducer(state, action) {
 // -------------------------------------------
 function BoardProvider({ children }) {
 	// ✅ Initialize user synchronously from localStorage
+	const [board,setBoards]=useState([])
 	const [user, setUser] = useState(() => {
 
 		const token = localStorage.getItem("token");
@@ -162,7 +163,7 @@ function BoardProvider({ children }) {
 	});
 
 	// ---------- initial load ----------
-	React.useEffect(() => {
+	useEffect(() => {
 		if (didInit.current) return;
 		didInit.current = true;
 
@@ -209,6 +210,9 @@ function BoardProvider({ children }) {
 
 		loadAll();
 	}, []);
+
+
+	
 
 	// -------------------------------------------
 	// 4️⃣ Action functions
