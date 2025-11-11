@@ -1,59 +1,64 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Signup = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
-  setSuccess("");
+    e.preventDefault();
+    setError("");
+    setSuccess("");
 
-  if (formData.password.length < 6) {
-    setError("Password must be at least 6 characters");
-    return;
-  }
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
 
-  setLoading(true);
+    setLoading(true);
 
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Signup failed");
+      const data = await res.json();
 
-    // ✅ Don't store token or user here
-    setSuccess("Signup successful! Redirecting to Login...");
-    setFormData({ name: "", email: "", password: "" });
+      if (!res.ok) throw new Error(data.message || "Signup failed");
 
-    // ✅ Redirect to login
-    setTimeout(() => navigate("/login"), 1000);
-  } catch (err) {
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
+      // Save token & user info to localStorage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ _id: data._id, name: data.name, email: data.email })
+      );
 
+      setSuccess("Signup successful! Redirecting to Login...");
+      setFormData({ name: "", email: "", password: "" });
 
+      setTimeout(() => navigate("/login"), 1000);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
@@ -74,6 +79,7 @@ const Signup = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Full Name */}
           <div>
             <label className="block text-sm font-medium text-gray-600">
               Full Name
@@ -88,6 +94,7 @@ const Signup = () => {
             />
           </div>
 
+          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-600">
               Email
@@ -102,6 +109,7 @@ const Signup = () => {
             />
           </div>
 
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-600">
               Password
@@ -116,6 +124,7 @@ const Signup = () => {
             />
           </div>
 
+          {/* Submit button */}
           <button
             type="submit"
             disabled={loading}
@@ -126,11 +135,11 @@ const Signup = () => {
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-4">
-  Already have an account?{" "}
-  <Link to="/login" className="text-blue-500 hover:underline">
-    Log In
-  </Link>
-</p>
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-500 hover:underline">
+            Log In
+          </Link>
+        </p>
       </div>
     </div>
   );
