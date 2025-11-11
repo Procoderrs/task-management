@@ -4,7 +4,9 @@ import BoardCard from "./BoardCard";
 import { BoardContext } from "../context/boardContext"; // ✅ import context
 
 const Dashboard = () => {
-	const { boards } = useContext(BoardContext); // ✅ use real boards
+	if (!boards) return <p>Loading boards...</p>;
+
+	const { boards = [] } = useContext(BoardContext) || {};// ✅ use real boards
 
 	return (
 		<div className="min-h-screen  bg-linear-to-br from-pink-100 to-yellow-50">
