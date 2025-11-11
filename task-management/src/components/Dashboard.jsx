@@ -13,8 +13,8 @@ const Dashboard = () => {
     <div className="min-h-screen bg-linear-to-br from-pink-100 to-yellow-50">
       <Header />
 
-      {/* Boards grid */}
-      <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    
+      {/* <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {boards.length > 0 ? (
           boards.map((board) =>
             board && board._id ? <BoardCard key={board._id} board={board} /> : null
@@ -22,7 +22,7 @@ const Dashboard = () => {
         ) : (
           <p className="text-gray-500">No boards yet. Add one!</p>
         )}
-      </div>
+      </div>  */}
     </div>
   );
 };
