@@ -18,14 +18,17 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: [
-    "https://task-management-5qzx.vercel.app",
-    "http://localhost:5173"
-  ],
+  origin: (origin, callback) => {
+    // allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error("CORS not allowed from this origin: " + origin), false);
+  },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
 
 app.use(express.json());
 
