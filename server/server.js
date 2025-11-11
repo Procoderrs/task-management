@@ -19,14 +19,7 @@ const allowedOrigins = [
 
 
 app.use(cors({
-  origin: function(origin, callback) {
-    // allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    callback(null, false); // return false instead of Error
-  },
+  origin: ["https://task-management-5qzx.vercel.app", "http://localhost:5173"],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
