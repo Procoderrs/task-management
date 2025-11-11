@@ -33,7 +33,7 @@ app.use(cors({
   credentials: true
 }));
 
-// handle preflight requests
+/* // handle preflight requests
 app.options("*", cors({
   origin: allowedOrigins,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -41,7 +41,7 @@ app.options("*", cors({
   credentials: true
 }));
 
-
+ */
 
 app.use(express.json());
 
