@@ -27,43 +27,39 @@ useEffect(() => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-    setLoading(true);
+  e.preventDefault();
+  setError("");
+  setSuccess("");
+  setLoading(true);
 
-    try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Login failed");
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Login failed");
 
-      // ✅ Save token & user
-      localStorage.setItem("token", data.token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ _id: data._id, name: data.name, email: data.email })
-      );
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify({
+      _id: data._id,
+      name: data.name,
+      email: data.email
+    }));
 
-      // ✅ Update context immediately (so ProtectedRoute sees it)
-      login(data.token, {
-        _id: data._id,
-        name: data.name,
-        email: data.email,
-      });
+    login(data.token, { _id: data._id, name: data.name, email: data.email });
 
-      setSuccess("Login successful! Redirecting...");
-      setTimeout(() => navigate("/dashboard"), 800); // shorter delay
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setSuccess("Login successful! Redirecting...");
+    setTimeout(() => navigate("/dashboard"), 800);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">

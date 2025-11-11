@@ -19,43 +19,45 @@ const Signup = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
+  e.preventDefault();
+  setError("");
+  setSuccess("");
 
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return;
-    }
+  if (formData.password.length < 6) {
+    setError("Password must be at least 6 characters");
+    return;
+  }
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      const res = await fetch("http://localhost:5000/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Signup failed");
 
-      if (!res.ok) throw new Error(data.message || "Signup failed");
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify({
+      _id: data._id,
+      name: data.name,
+      email: data.email
+    }));
 
-      // store token in localStorage for later use
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify({ _id: data._id, name: data.name, email: data.email }));
+    setSuccess("Signup successful! Redirecting to Login...");
+    setFormData({ name: "", email: "", password: "" });
 
-      setSuccess("Signup successful! Redirecting to Login...");
-      setFormData({ name: "", email: "", password: "" });
+    setTimeout(() => navigate("/login"), 1000);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
-      // redirect to dashboard after short delay
-      setTimeout(() => navigate("/login"), 1000);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
