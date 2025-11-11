@@ -14,14 +14,14 @@ const Login = () => {
   const [success, setSuccess] = useState("");
 
 
-
+/* 
 useEffect(() => {
   const token = localStorage.getItem("token");
   if (token) {
     navigate("/dashboard");
   }
 }, [navigate]);
-
+ */
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };

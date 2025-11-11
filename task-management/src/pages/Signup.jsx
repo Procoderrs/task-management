@@ -40,16 +40,11 @@ const Signup = () => {
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Signup failed");
 
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify({
-      _id: data._id,
-      name: data.name,
-      email: data.email
-    }));
-
+    // ✅ Don't store token or user here
     setSuccess("Signup successful! Redirecting to Login...");
     setFormData({ name: "", email: "", password: "" });
 
+    // ✅ Redirect to login
     setTimeout(() => navigate("/login"), 1000);
   } catch (err) {
     setError(err.message);
@@ -57,6 +52,7 @@ const Signup = () => {
     setLoading(false);
   }
 };
+
 
 
   return (
