@@ -10,6 +10,7 @@ const Dashboard = () => {
 	console.log('boards in dashboard',boards);
 
 	return (
+		<>
 		<div className="min-h-screen  bg-linear-to-br from-pink-100 to-yellow-50">
 			<Header />
 
@@ -22,6 +23,7 @@ const Dashboard = () => {
 				)}
 			</div>
 		</div>
+		</>
 	);
 };
 
