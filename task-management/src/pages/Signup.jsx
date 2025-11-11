@@ -61,6 +61,7 @@ const Signup = () => {
   };
 
   return (
+    <>
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
         <h2 className="text-2xl font-semibold text-center mb-4 text-blue-600">
@@ -142,6 +143,7 @@ const Signup = () => {
         </p>
       </div>
     </div>
+    </>
   );
 };
 
