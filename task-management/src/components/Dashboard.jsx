@@ -1,30 +1,30 @@
 import React, { useContext } from "react";
 import Header from "./Header";
 import BoardCard from "./BoardCard";
-import { BoardContext } from "../context/boardContext"; // ✅ import context
+import { BoardContext } from "../context/boardContext";
 
 const Dashboard = () => {
-	if (!boards) return <p>Loading boards...</p>;
+  const context = useContext(BoardContext);
+  const boards = Array.isArray(context?.boards) ? context.boards : [];
 
-	const { boards = [] } = useContext(BoardContext) || {};// ✅ use real boards
-	console.log('boards in dashboard',boards);
+  console.log("boards in dashboard", boards);
 
-	return (
-		<>
-		<div className="min-h-screen  bg-linear-to-br from-pink-100 to-yellow-50">
-			<Header />
+  return (
+    <div className="min-h-screen bg-linear-to-br from-pink-100 to-yellow-50">
+      <Header />
 
-			{/* Boards grid */}
-			<div className="p-6 grid grid-cols-1   sm:grid-cols-2 lg:grid-cols-4 gap-6  ">
-				{boards.length > 0 ? (
-					boards.map((board) => <BoardCard key={board._id} board={board} />)
-				) : (
-					<p className="text-gray-500">No boards yet. Add one!</p>
-				)}
-			</div>
-		</div>
-		</>
-	);
+      {/* Boards grid */}
+      <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {boards.length > 0 ? (
+          boards.map((board) =>
+            board && board._id ? <BoardCard key={board._id} board={board} /> : null
+          )
+        ) : (
+          <p className="text-gray-500">No boards yet. Add one!</p>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default Dashboard;
