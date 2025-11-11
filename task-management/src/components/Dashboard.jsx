@@ -7,6 +7,7 @@ const Dashboard = () => {
 	if (!boards) return <p>Loading boards...</p>;
 
 	const { boards = [] } = useContext(BoardContext) || {};// ✅ use real boards
+	console.log('boards in dashboard',boards);
 
 	return (
 		<div className="min-h-screen  bg-linear-to-br from-pink-100 to-yellow-50">
