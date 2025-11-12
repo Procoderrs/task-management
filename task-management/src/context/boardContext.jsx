@@ -113,34 +113,27 @@ function boardReducer(state, action) {
 // -------------------------------------------
 function BoardProvider({ children }) {
 	// ✅ Initialize user synchronously from localStorage
-	const [boards,setBoards]=useState([])
-	const [user, setUser] = useState(null);
-	const [token,setToken]=useState(localStorage.getItem('token')|| null);
+	const [board,setBoards]=useState([])
+	const [user, setUser] = useState(() => {
 
-useEffect(()=>{
-	if(token) fetchBoards(token)
-},[token])
+		const token = localStorage.getItem("token");
+		const userData = localStorage.getItem("user");
+		return token && userData ? JSON.parse(userData) : null;
+	});
+    const [loading,setLoading]=useState(true)
 
-		const fetchBoards=async (jwt)=>{
-			try {
-				const res=await fetch (`${import.meta.env.VITE_API_URL}/api/boards`,{
-					headers:{Authorization:`Bearer ${jwt}`},
-				})
-				const data=await res.json();
-				if(Array.isArray(data)) setBoards(data);
-				else setBoards([]);
-			} catch (err) {
-				console.log('failed to fetch boards',err);
-				setBoards([]);
-			}
-		}
-	
+	const login = async(token, userData) => {
+		localStorage.setItem("token", token);
+		localStorage.setItem("user", JSON.stringify(userData));
+		setUser(userData);
 
-	const login = async(jwt, userData) => {
-		setUser(userData)
-		setToken(jwt);
-		fetchBoards(jwt);
-
+		// Fetch boards immediately after login
+  try {
+    const boardsRaw = await getBoards();
+    dispatch({ type: "INIT", payload: boardsRaw });
+  } catch (err) {
+    console.error("Failed to load boards after login", err);
+  }
 	}
 
 	
@@ -149,8 +142,6 @@ useEffect(()=>{
 		localStorage.removeItem("token");
 		localStorage.removeItem("user");
 		setUser(null);
-		setToken(null);
-		setBoards(null);
 		window.location.href = "/login"; // redirect to login page
 	};
 	const [state, dispatch] = useReducer(boardReducer, initialState);
@@ -212,7 +203,9 @@ useEffect(()=>{
 				console.error("Failed to load boards/tasks:", err);
 				dispatch({ type: "INIT", payload: [] });
 			}
-			
+			finally{
+				setLoading(false)
+			}
 		};
 
 		loadAll();
@@ -328,7 +321,6 @@ useEffect(()=>{
 				user,
 				login,
 				logout,
-				boards,
 				boards: state.boards,
 				addBoard,
 				deleteBoard,
