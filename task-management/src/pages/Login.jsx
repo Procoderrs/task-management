@@ -47,6 +47,7 @@ const Login = () => {
       if (login) login(data.token, { _id: data._id, name: data.name, email: data.email });
 
       setSuccess("Login successful! Redirecting...");
+      console.log('data',data);
       setTimeout(() => navigate("/dashboard"), 800);
     } catch (err) {
       setError(err?.message || "Something went wrong");

@@ -50,6 +50,7 @@ const Signup = () => {
       );
 
       setSuccess("Signup successful! Redirecting to Login...");
+      console.log('data',data);
       setFormData({ name: "", email: "", password: "" });
 
       setTimeout(() => navigate("/login"), 1000);
