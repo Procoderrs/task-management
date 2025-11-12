@@ -64,7 +64,7 @@ import React, { useContext, useState, useRef, useEffect } from "react";
                    
                     </> )
                   
-                   : ( <a href="/login" className="underline"> Login </a> )}
+                   : ( <a href="/login" className=" bg-purple-500 text-white p-2 rounded"> Login </a> )}
                    
                     </div>
                     

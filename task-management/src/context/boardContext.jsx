@@ -1,5 +1,11 @@
 // ✅ src/context/BoardContext.jsx
-import React, { createContext, useReducer, useRef ,useState,useEffect} from "react";
+import React, {
+	createContext,
+	useReducer,
+	useRef,
+	useState,
+	useEffect,
+} from "react";
 import { v4 as uuidv4 } from "uuid";
 
 // API helpers
@@ -42,7 +48,11 @@ function boardReducer(state, action) {
 							? { ...col, taskIds: [...col.taskIds, task.id] }
 							: col
 					);
-					return { ...board, tasks: [...(board.tasks || []), task], columns: newColumns };
+					return {
+						...board,
+						tasks: [...(board.tasks || []), task],
+						columns: newColumns,
+					};
 				}),
 			};
 		}
@@ -87,7 +97,10 @@ function boardReducer(state, action) {
 
 					const newColumns = board.columns.map((col) => {
 						if (col.taskIds.includes(taskId) && col.id !== newColumnId) {
-							return { ...col, taskIds: col.taskIds.filter((id) => id !== taskId) };
+							return {
+								...col,
+								taskIds: col.taskIds.filter((id) => id !== taskId),
+							};
 						}
 						if (col.id === newColumnId) {
 							return { ...col, taskIds: [...col.taskIds, taskId] };
@@ -113,30 +126,27 @@ function boardReducer(state, action) {
 // -------------------------------------------
 function BoardProvider({ children }) {
 	// ✅ Initialize user synchronously from localStorage
-	const [board,setBoards]=useState([])
+	const [board, setBoards] = useState([]);
 	const [user, setUser] = useState(() => {
-
 		const token = localStorage.getItem("token");
 		const userData = localStorage.getItem("user");
 		return token && userData ? JSON.parse(userData) : null;
 	});
-    const [loading,setLoading]=useState(true)
+	const [loading, setLoading] = useState(true);
 
-	const login = async(token, userData) => {
+	const login = async (token, userData) => {
 		localStorage.setItem("token", token);
 		localStorage.setItem("user", JSON.stringify(userData));
 		setUser(userData);
 
 		// Fetch boards immediately after login
-  try {
-    const boardsRaw = await getBoards();
-    dispatch({ type: "INIT", payload: boardsRaw });
-  } catch (err) {
-    console.error("Failed to load boards after login", err);
-  }
-	}
-
-	
+		try {
+			const boardsRaw = await getBoards();
+			dispatch({ type: "INIT", payload: boardsRaw });
+		} catch (err) {
+			console.error("Failed to load boards after login", err);
+		}
+	};
 
 	const logout = () => {
 		localStorage.removeItem("token");
@@ -169,7 +179,11 @@ function BoardProvider({ children }) {
 
 		const loadAll = async () => {
 			try {
-				const [boardsRaw, tasksRaw] = await Promise.all([getBoards(), getTasks()]);
+				const [boardsRaw, tasksRaw] = await Promise.all([
+					getBoards(),
+					getTasks(),
+				]);
+				console.log(boardsRaw, tasksRaw);
 
 				const boards = boardsRaw.map((b) => ({
 					...b,
@@ -202,17 +216,13 @@ function BoardProvider({ children }) {
 			} catch (err) {
 				console.error("Failed to load boards/tasks:", err);
 				dispatch({ type: "INIT", payload: [] });
-			}
-			finally{
-				setLoading(false)
+			} finally {
+				setLoading(false);
 			}
 		};
 
 		loadAll();
 	}, []);
-
-
-	
 
 	// -------------------------------------------
 	// 4️⃣ Action functions
@@ -247,23 +257,74 @@ function BoardProvider({ children }) {
 		}
 	};
 
-	const addTask = async (boardId, columnId, taskData) => {
+	/* const addTask = async (boardId, columnId, taskData) => {
 		try {
 			const payload = { ...taskData, boardId, status: columnId };
 			const serverTask = await createTask(payload);
+
+
 			const task = normalizeTask(serverTask);
 			dispatch({ type: "ADD_TASK", payload: { boardId, task } });
 			return task;
 		} catch (err) {
 			console.error("Failed to create task:", err);
 		}
-	};
+	}; */
+
+
+
+	const addTask = async (boardId, columnId, taskData) => {
+  // 1️⃣ Temporary task for UI
+  const tempId = uuidv4();
+  const tempTask = normalizeTask({
+    ...taskData,
+    _id: tempId,
+    id: tempId,
+    boardId,
+    status: columnId,
+  });
+  dispatch({ type: "ADD_TASK", payload: { boardId, task: tempTask } });
+
+  try {
+    // 2️⃣ Clean payload for backend
+    const payload = {
+      title: taskData.title,
+      description: taskData.description,
+      priority: taskData.priority,
+      dueDate: taskData.dueDate,
+      tags: taskData.tags,
+      boardId,
+      status: columnId, // make sure this matches backend column ID
+    };
+
+    const serverTask = await createTask(payload);
+    const normalizedTask = normalizeTask(serverTask);
+
+    // 3️⃣ Replace temp task with real task from backend
+    dispatch({
+      type: "UPDATE_TASK",
+      payload: { boardId, taskId: tempTask.id, updates: normalizedTask },
+    });
+
+    return normalizedTask;
+  } catch (err) {
+    console.error("Failed to create task:", err);
+
+    // Remove temp task on failure
+    dispatch({
+      type: "DELETE_TASK",
+      payload: { boardId, taskId: tempTask.id },
+    });
+  }
+};
+
 
 	const updateTask = async (boardId, taskId, updates) => {
 		try {
 			const board = state.boards.find((b) => b._id === boardId);
 			const task =
-				board && (board.tasks || []).find((t) => t.id === taskId || t._id === taskId);
+				board &&
+				(board.tasks || []).find((t) => t.id === taskId || t._id === taskId);
 			const serverId = task?._id || task?.id || taskId;
 
 			const serverUpdated = await updateTaskApi(serverId, updates);
@@ -283,7 +344,8 @@ function BoardProvider({ children }) {
 		try {
 			const board = state.boards.find((b) => b._id === boardId);
 			const task =
-				board && (board.tasks || []).find((t) => t.id === taskId || t._id === taskId);
+				board &&
+				(board.tasks || []).find((t) => t.id === taskId || t._id === taskId);
 			const serverId = task?._id || task?.id || taskId;
 
 			await deleteTaskApi(serverId);
@@ -297,10 +359,13 @@ function BoardProvider({ children }) {
 		try {
 			const board = state.boards.find((b) => b._id === boardId);
 			const task =
-				board && (board.tasks || []).find((t) => t.id === taskId || t._id === taskId);
+				board &&
+				(board.tasks || []).find((t) => t.id === taskId || t._id === taskId);
 			const serverId = task?._id || task?.id || taskId;
 
-			const serverUpdated = await updateTaskApi(serverId, { status: newColumnId });
+			const serverUpdated = await updateTaskApi(serverId, {
+				status: newColumnId,
+			});
 			const normalized = normalizeTask(serverUpdated);
 
 			dispatch({

@@ -43,11 +43,11 @@ const Signup = () => {
       if (!res.ok) throw new Error(data.message || "Signup failed");
 
       // Save token & user info to localStorage
-      localStorage.setItem("token", data.token);
+      /* localStorage.setItem("token", data.token);
       localStorage.setItem(
         "user",
         JSON.stringify({ _id: data._id, name: data.name, email: data.email })
-      );
+      ); */
 
       setSuccess("Signup successful! Redirecting to Login...");
       console.log('data',data);
