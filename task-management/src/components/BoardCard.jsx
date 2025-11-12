@@ -6,6 +6,8 @@ function BoardCard({ board }) {
 	const navigate = useNavigate();
 	console.log("board-id-board-card", board._id);
 	console.log("🔍 Board received in BoardView:", board);
+	console.log("🧩 board.title type:", typeof board.title, board.title);
+
 
 	const { deleteBoard } = useContext(BoardContext);
 
@@ -27,8 +29,8 @@ function BoardCard({ board }) {
 			style={{ backgroundColor: board.color }}
 		>
 			<h2 className="text-lg font-bold text-zinc-700 ">
-				{board.title}
-			</h2>
+  {typeof board.title === "string" ? board.title : JSON.stringify(board.title)}
+</h2>
 
 			<button
 				onClick={handleDelete}
