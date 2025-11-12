@@ -4,8 +4,9 @@ import BoardCard from "./BoardCard";
 import { BoardContext } from "../context/boardContext";
 
 const Dashboard = () => {
-  const context = useContext(BoardContext);
-  const boards = Array.isArray(context?.boards) ? context.boards : [];
+ const { boards } = useContext(BoardContext);
+
+  const safeBoards = Array.isArray(boards) ? boards : [];
 
   console.log("boards in dashboard", boards);
 
@@ -15,8 +16,8 @@ const Dashboard = () => {
 
     
       <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {boards.length > 0 ? (
-          boards.map((board) =>
+        {safeBoards.length > 0 ? (
+          safeBoards.map((board) =>
             board && board._id ? <BoardCard key={board._id} board={board} /> : null
           )
         ) : (

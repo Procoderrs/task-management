@@ -114,26 +114,33 @@ function boardReducer(state, action) {
 function BoardProvider({ children }) {
 	// ✅ Initialize user synchronously from localStorage
 	const [board,setBoards]=useState([])
-	const [user, setUser] = useState(() => {
+	const [user, setUser] = useState(null);
+	const [token,setToken]=useState(localStorage.getItem('token')|| null);
 
-		const token = localStorage.getItem("token");
-		const userData = localStorage.getItem("user");
-		return token && userData ? JSON.parse(userData) : null;
-	});
-    const [loading,setLoading]=useState(true)
+useEffect(()=>{
+	if(token) fetchBoards(token)
+},[token])
 
-	const login = async(token, userData) => {
-		localStorage.setItem("token", token);
-		localStorage.setItem("user", JSON.stringify(userData));
-		setUser(userData);
+		const fetchBoards=async (jwt)=>{
+			try {
+				const res=await fetch (`${import.meta.env.VITE_API_URL}/api/boards`,{
+					headers:{Authorization:`Bearer ${jwt}`},
+				})
+				const data=await res.json();
+				if(Array.isArray(data)) setBoards(data);
+				else setBoards([]);
+			} catch (err) {
+				console.log('failed to fetch boards',err);
+				setBoards([]);
+			}
+		}
+	
 
-		// Fetch boards immediately after login
-  try {
-    const boardsRaw = await getBoards();
-    dispatch({ type: "INIT", payload: boardsRaw });
-  } catch (err) {
-    console.error("Failed to load boards after login", err);
-  }
+	const login = async(jwt, userData) => {
+		setUser(userData)
+		setToken(jwt);
+		fetchBoards(jwt);
+
 	}
 
 	
@@ -142,6 +149,8 @@ function BoardProvider({ children }) {
 		localStorage.removeItem("token");
 		localStorage.removeItem("user");
 		setUser(null);
+		setToken(null);
+		setBoards(null);
 		window.location.href = "/login"; // redirect to login page
 	};
 	const [state, dispatch] = useReducer(boardReducer, initialState);
@@ -321,6 +330,7 @@ function BoardProvider({ children }) {
 				user,
 				login,
 				logout,
+				
 				boards: state.boards,
 				addBoard,
 				deleteBoard,
