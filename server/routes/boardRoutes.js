@@ -86,8 +86,6 @@ router.delete("/:id", authMiddleware, async (req, res) => {
 
 
 
-router.post("/", authMiddleware, async (req, res) => {
-  // only logged-in users can create boards
-});
+
 
 export default router;

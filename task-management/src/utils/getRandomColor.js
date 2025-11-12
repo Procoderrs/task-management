@@ -7,11 +7,11 @@ export const getRandomLightColor = () => {
 		"#E1E9C9",
 		"#FEEBF6",
 		"#F4F8D3",
-		,
+		
 		"#FFEDFA",
-		,
+		
 		"#EDE8DC",
-		,
+		
 		"#FEFAE0",
 		"#FFEAA7",
 		"#F5EEE6",
