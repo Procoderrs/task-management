@@ -113,7 +113,7 @@ function boardReducer(state, action) {
 // -------------------------------------------
 function BoardProvider({ children }) {
 	// ✅ Initialize user synchronously from localStorage
-	const [board,setBoards]=useState([])
+	const [boards,setBoards]=useState([])
 	const [user, setUser] = useState(null);
 	const [token,setToken]=useState(localStorage.getItem('token')|| null);
 
@@ -212,9 +212,7 @@ useEffect(()=>{
 				console.error("Failed to load boards/tasks:", err);
 				dispatch({ type: "INIT", payload: [] });
 			}
-			finally{
-				setLoading(false)
-			}
+			
 		};
 
 		loadAll();
@@ -330,7 +328,7 @@ useEffect(()=>{
 				user,
 				login,
 				logout,
-				
+				boards,
 				boards: state.boards,
 				addBoard,
 				deleteBoard,
