@@ -1,12 +1,18 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
 import TaskCard from "./TaskCard";
 import { BoardContext } from "../../context/boardContext";
+import { useDroppable } from "@dnd-kit/core"; // ✅ import added
 
 const Column = ({ column, tasks = [], board, isFiltered }) => {
   const { addTask } = useContext(BoardContext);
   const [showInput, setShowInput] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState("");
-  const inputRef = useRef(null); // Ref for input
+  const inputRef = useRef(null);
+
+  // ✅ Make this column droppable
+  const { setNodeRef, isOver } = useDroppable({
+    id: column.id, // unique ID for drag target (matches task.status or target column)
+  });
 
   if (!column || !column.id) return null;
 
@@ -15,7 +21,6 @@ const Column = ({ column, tasks = [], board, isFiltered }) => {
   const handleAddTask = async () => {
     if (!newTaskTitle.trim()) return;
 
-    // Add task via context
     await addTask(board._id, column.id, {
       title: newTaskTitle,
       description: "",
@@ -23,27 +28,29 @@ const Column = ({ column, tasks = [], board, isFiltered }) => {
       tags: [],
     });
 
-    // Clear input but keep it open
     setNewTaskTitle("");
     setShowInput(true);
-
-    // Auto-focus input after adding
     inputRef.current?.focus();
   };
 
-  // Auto-focus input when first opened
   useEffect(() => {
     if (showInput) inputRef.current?.focus();
   }, [showInput]);
 
   return (
-    <div className="bg-gray-100 p-4 rounded-lg shadow min-h-[200px] flex flex-col">
+    <div
+      ref={setNodeRef} // ✅ DnD Kit knows this column is droppable
+      className={`p-4 rounded-lg shadow min-h-[200px] flex flex-col transition-colors duration-200 ${
+        isOver ? "bg-yellow-100 border-yellow-500" : "bg-gray-100"
+      }`}
+    >
       <h3 className="font-bold mb-2 text-gray-700">{column.title || "Column"}</h3>
 
       <div className="space-y-3 flex-1">
         {tasksToRender.map(
           (task) =>
-            task && task.id && (
+            task &&
+            task.id && (
               <TaskCard
                 key={task.id}
                 task={task}
@@ -60,7 +67,7 @@ const Column = ({ column, tasks = [], board, isFiltered }) => {
               type="text"
               placeholder="Task title..."
               value={newTaskTitle}
-              ref={inputRef} // attach ref
+              ref={inputRef}
               onChange={(e) => setNewTaskTitle(e.target.value)}
               className="border px-2 py-1 rounded w-full outline-none"
             />
@@ -84,10 +91,9 @@ const Column = ({ column, tasks = [], board, isFiltered }) => {
           </div>
         )}
 
-        {/* Show "Add Task" prompt if input is hidden */}
         {!showInput && tasksToRender.length > 0 && (
           <p
-            className="text-gray-400 text-sm cursor-pointer hover:text-gray-600"
+            className="text-purple-800 text-sm cursor-pointer hover:text-purple-900"
             onClick={() => setShowInput(true)}
           >
             + Add a task
